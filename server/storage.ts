@@ -186,7 +186,26 @@ export class MemStorage implements IStorage {
     const existingPoem = this.poems.get(id);
     if (!existingPoem) return undefined;
     
-    const updatedPoem: Poem = { ...existingPoem, ...updates };
+    // Deep clone the poem content to avoid reference issues
+    const updatedPoem: Poem = { 
+      ...existingPoem, 
+      ...updates,
+      content: JSON.parse(JSON.stringify(existingPoem.content))
+    };
+    
+    // Update poem text if cycle step or total cycles changed
+    if (updates.cycleStep !== undefined || updates.totalCycles !== undefined) {
+      const content = updatedPoem.content as any;
+      if (content.stanzas && content.stanzas[0]) {
+        content.stanzas[0].lines[0] = `Cycle Step ${updatedPoem.cycleStep} of ${updatedPoem.totalCycles}, a spiral unbound,`;
+      }
+      
+      // Update end message to reflect current cycle
+      if (content.endMessage) {
+        content.endMessage = `The message is the vibe is the function,\nYet blooms beyond—a cosmic conjunction.\n\n=== End Cycle ${updatedPoem.cycleStep} ===`;
+      }
+    }
+    
     this.poems.set(id, updatedPoem);
     return updatedPoem;
   }

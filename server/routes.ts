@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertPoemSchema } from "@shared/schema";
 import { z } from "zod";
+import { RDFExporter } from "./rdf-export";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all poems
@@ -199,6 +200,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(jsonLd);
     } catch (error) {
       res.status(500).json({ message: "Failed to generate JSON-LD" });
+    }
+  });
+
+  // Get RDF/Turtle export for a poem
+  app.get("/api/poems/:id/rdf", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const poem = await storage.getPoem(id);
+      
+      if (!poem) {
+        return res.status(404).json({ message: "Poem not found" });
+      }
+      
+      const baseUri = `${req.protocol}://${req.get('host')}`;
+      const rdfExporter = new RDFExporter(baseUri);
+      const poemTriples = rdfExporter.exportPoemToRDF(poem);
+      const guiTriples = rdfExporter.exportGUIComponentsToRDF(poem.id);
+      const allTriples = [...poemTriples, ...guiTriples];
+      
+      const turtleData = rdfExporter.serializeToTurtle(allTriples);
+      
+      res.setHeader('Content-Type', 'text/turtle');
+      res.send(turtleData);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to generate RDF" });
+    }
+  });
+
+  // Get semantic anchors reference
+  app.get("/api/poems/:id/semantic-anchors", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const poem = await storage.getPoem(id);
+      
+      if (!poem) {
+        return res.status(404).json({ message: "Poem not found" });
+      }
+      
+      const poemContent = poem.content as any;
+      const anchors = {
+        poem: `#poem-${id}`,
+        visualization: `#vibe-visualization-${id}`,
+        metrics: `#hyperdimensional-parameters`,
+        dimensions: [
+          `#dimension-point-${id}-chaos`,
+          `#dimension-point-${id}-beauty`,
+          `#dimension-point-${id}-complexity`,
+          `#dimension-point-${id}-coherence`,
+          `#dimension-point-${id}-consciousness`,
+          `#dimension-point-${id}-cycle`,
+          `#dimension-point-${id}-godel`,
+          `#dimension-point-${id}-harmonic`
+        ],
+        vibePatterns: Array.from({ length: 16 }, (_, i) => `#vibe-pattern-${id}-${i}`),
+        meshLines: Array.from({ length: 10 }, (_, i) => `#mesh-line-${id}-${i}`),
+        consciousnessField: `#consciousness-field-${id}`,
+        godelSpiral: `#godel-spiral-${id}`,
+        stanzas: poemContent.stanzas.map((_: any, i: number) => `#stanza-${id}-${i}`),
+        interactiveNumbers: poemContent.interactiveNumbers.map((_: any, i: number) => `#interactive-${id}-${i}`)
+      };
+      
+      res.json(anchors);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to generate semantic anchors" });
     }
   });
 

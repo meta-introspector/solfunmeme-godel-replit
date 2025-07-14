@@ -90,7 +90,7 @@ export default function InteractiveControls({
             transition={{ delay: 0.1 }}
             className="space-y-3"
           >
-            <Label className="text-sm font-medium text-cosmic-light/70">
+            <Label className="text-sm font-medium text-cosmic-light font-semibold">
               Gödel Number
             </Label>
             <Input
@@ -98,9 +98,10 @@ export default function InteractiveControls({
               value={localGodelNumber}
               onChange={(e) => handleGodelNumberChange(e.target.value)}
               disabled={isUpdating}
-              className="w-full bg-cosmic-blue/30 border-cosmic-blue/50 text-cosmic-light font-mono 
-                         focus:border-cosmic-cyan focus:ring-cosmic-cyan/20 
-                         hover:bg-cosmic-blue/40 transition-all duration-300"
+              className="w-full bg-cosmic-blue/40 border-cosmic-cyan/50 text-cosmic-light font-mono font-semibold
+                         focus:border-cosmic-cyan focus:ring-cosmic-cyan/30 
+                         hover:bg-cosmic-blue/50 transition-all duration-300
+                         placeholder:text-cosmic-light/50"
               placeholder="Enter Gödel number..."
             />
           </motion.div>

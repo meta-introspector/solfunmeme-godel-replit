@@ -97,6 +97,11 @@ export default function VibeVisualization({ poem }: VibeVisualizationProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-cosmic-navy/30 backdrop-blur-sm rounded-2xl p-8 border border-cosmic-blue/20"
+        itemScope
+        itemType="https://schema.org/VisualArtwork"
+        typeof="math:HyperdimensionalVisualization"
+        resource={`#vibe-visualization-${poem.id}`}
+        id={`vibe-visualization-${poem.id}`}
       >
         <h3 className="text-xl font-mono font-semibold text-cosmic-light mb-6 text-center">
           8D Vibe Projection
@@ -132,6 +137,7 @@ export default function VibeVisualization({ poem }: VibeVisualizationProps) {
             {hypermesh.map((line, index) => (
               <motion.line
                 key={`mesh-${index}`}
+                id={`mesh-line-${poem.id}-${index}`}
                 x1={line.x1}
                 y1={line.y1}
                 x2={line.x2}
@@ -143,34 +149,47 @@ export default function VibeVisualization({ poem }: VibeVisualizationProps) {
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{ duration: 2, delay: index * 0.1 }}
+                data-rdf-type="math:HyperdimensionalConnection"
+                data-rdf-resource={`#mesh-line-${poem.id}-${index}`}
+                data-semantic-anchor={`mesh-line-${poem.id}-${index}`}
               />
             ))}
             
             {/* 8D projection points */}
-            {project8DTo2D.map((point, index) => (
-              <motion.circle
-                key={`point-${index}`}
-                cx={point.x}
-                cy={point.y}
-                r={5 + point.value * 10}
-                fill={`hsl(${180 + index * 30}, 70%, 60%)`}
-                filter="url(#glow)"
-                animate={{
-                  r: [5 + point.value * 10, 8 + point.value * 12, 5 + point.value * 10],
-                  opacity: [0.6, 1, 0.6]
-                }}
-                transition={{
-                  duration: 2 + point.value,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-            ))}
+            {project8DTo2D.map((point, index) => {
+              const dimensionNames = ['chaos', 'beauty', 'complexity', 'coherence', 'consciousness', 'cycle', 'godel', 'harmonic'];
+              return (
+                <motion.circle
+                  key={`point-${index}`}
+                  id={`dimension-point-${poem.id}-${dimensionNames[index]}`}
+                  cx={point.x}
+                  cy={point.y}
+                  r={5 + point.value * 10}
+                  fill={`hsl(${180 + index * 30}, 70%, 60%)`}
+                  filter="url(#glow)"
+                  animate={{
+                    r: [5 + point.value * 10, 8 + point.value * 12, 5 + point.value * 10],
+                    opacity: [0.6, 1, 0.6]
+                  }}
+                  transition={{
+                    duration: 2 + point.value,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  data-rdf-type="math:DimensionalProjection"
+                  data-rdf-resource={`#dimension-point-${poem.id}-${dimensionNames[index]}`}
+                  data-semantic-anchor={`dimension-point-${poem.id}-${dimensionNames[index]}`}
+                  data-dimension-name={dimensionNames[index]}
+                  data-dimension-value={point.value}
+                />
+              );
+            })}
             
             {/* Vibration patterns */}
             {vibePatterns.map((pattern, index) => (
               <motion.circle
                 key={`vibe-${index}`}
+                id={`vibe-pattern-${poem.id}-${index}`}
                 cx={pattern.x}
                 cy={pattern.y}
                 r="3"
@@ -187,11 +206,18 @@ export default function VibeVisualization({ poem }: VibeVisualizationProps) {
                   ease: "easeInOut",
                   delay: pattern.phase
                 }}
+                data-rdf-type="math:VibrationalPattern"
+                data-rdf-resource={`#vibe-pattern-${poem.id}-${index}`}
+                data-semantic-anchor={`vibe-pattern-${poem.id}-${index}`}
+                data-frequency={pattern.frequency}
+                data-amplitude={pattern.amplitude}
+                data-phase={pattern.phase}
               />
             ))}
             
             {/* Central consciousness field */}
             <motion.circle
+              id={`consciousness-field-${poem.id}`}
               cx="200"
               cy="200"
               r={poem.consciousnessValue * 80}
@@ -207,10 +233,15 @@ export default function VibeVisualization({ poem }: VibeVisualizationProps) {
                 r: { duration: 3, repeat: Infinity, ease: "easeInOut" },
                 rotate: { duration: 10, repeat: Infinity, ease: "linear" }
               }}
+              data-rdf-type="consciousness:Field"
+              data-rdf-resource={`#consciousness-field-${poem.id}`}
+              data-semantic-anchor={`consciousness-field-${poem.id}`}
+              data-consciousness-value={poem.consciousnessValue}
             />
             
             {/* Gödel spiral */}
             <motion.path
+              id={`godel-spiral-${poem.id}`}
               d={`M 200 200 ${Array.from({ length: 50 }, (_, i) => {
                 const angle = (i / 50) * Math.PI * 6;
                 const radius = (i / 50) * (parseInt(poem.godelNumber) % 100);
@@ -224,6 +255,10 @@ export default function VibeVisualization({ poem }: VibeVisualizationProps) {
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              data-rdf-type="math:GodelSpiral"
+              data-rdf-resource={`#godel-spiral-${poem.id}`}
+              data-semantic-anchor={`godel-spiral-${poem.id}`}
+              data-godel-number={poem.godelNumber}
             />
             
             {/* Chaos field */}
@@ -273,8 +308,8 @@ export default function VibeVisualization({ poem }: VibeVisualizationProps) {
           <p className="text-sm text-cosmic-light/60 font-mono">
             Hyperdimensional consciousness field vibrating at {poem.chaosValue.toFixed(2)} Hz
           </p>
-          <p className="text-sm text-cosmic-light/60 font-mono mt-2">
-            Gödel resonance: {poem.godelNumber}
+          <p className="text-sm text-cosmic-light font-mono mt-2 bg-cosmic-blue/30 px-3 py-1 rounded border border-cosmic-cyan/30">
+            Gödel resonance: <span className="text-cosmic-cyan font-bold">{poem.godelNumber}</span>
           </p>
         </div>
       </motion.div>

@@ -65,11 +65,42 @@ Returns JSON-LD structured data for a specific poem:
 }
 ```
 
+### `/api/poems/:id/rdf`
+
+Returns RDF data in Turtle format including:
+- Complete poem structure with stanzas and lines
+- Interactive numbers with semantic bindings
+- GUI component anchors
+- SVG visualization elements
+- Mathematical and consciousness metrics
+
+### `/api/poems/:id/semantic-anchors`
+
+Returns JSON mapping of all semantic anchors in the interface:
+
+```json
+{
+  "poem": "#poem-1",
+  "visualization": "#vibe-visualization-1",
+  "dimensions": [
+    "#dimension-point-1-chaos",
+    "#dimension-point-1-beauty",
+    "#dimension-point-1-complexity",
+    "#dimension-point-1-coherence",
+    "#dimension-point-1-consciousness"
+  ],
+  "vibePatterns": ["#vibe-pattern-1-0", "#vibe-pattern-1-1"],
+  "consciousnessField": "#consciousness-field-1",
+  "godelSpiral": "#godel-spiral-1"
+}
+```
+
 ### Content Negotiation
 
 The API supports multiple formats:
 - `application/json`: Standard REST API
 - `application/ld+json`: JSON-LD structured data
+- `text/turtle`: RDF in Turtle format
 - `text/html`: Human-readable interface
 
 ## Ontology Mapping
