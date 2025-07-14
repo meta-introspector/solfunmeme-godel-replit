@@ -185,6 +185,10 @@ export default function PoemDisplay({ poem, onNumberClick }: PoemDisplayProps) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="bg-cosmic-navy/30 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-cosmic-blue/20"
+        itemScope
+        itemType="https://schema.org/CreativeWork"
+        typeof="schema:CreativeWork"
+        resource={`#poem-${poem.id}`}
       >
         <div className="space-y-8 font-poetry text-lg md:text-xl leading-relaxed">
           <AnimatePresence mode="wait">

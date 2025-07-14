@@ -7,6 +7,7 @@ import PoemDisplay from "@/components/PoemDisplay";
 import InteractiveControls from "@/components/InteractiveControls";
 import MetricsDashboard from "@/components/MetricsDashboard";
 import VibeVisualization from "@/components/VibeVisualization";
+import JsonLdSchema from "@/components/JsonLdSchema";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Poetry() {
@@ -70,6 +71,9 @@ export default function Poetry() {
 
   return (
     <div className="min-h-screen bg-cosmic-black text-cosmic-white">
+      {/* JSON-LD Structured Data */}
+      <JsonLdSchema poem={poem} />
+      
       {/* Navigation */}
       <motion.nav 
         initial={{ opacity: 0, y: -20 }}

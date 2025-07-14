@@ -35,6 +35,10 @@ export default function MetricsDashboard({ poem }: MetricsDashboardProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-cosmic-navy/50 backdrop-blur-sm rounded-2xl p-8 border border-cosmic-blue/20"
+        itemScope
+        itemType="https://schema.org/Dataset"
+        typeof="schema:Dataset"
+        resource="#hyperdimensional-parameters"
       >
         <h3 className="text-xl font-mono font-semibold text-cosmic-light mb-6">
           System Metrics
