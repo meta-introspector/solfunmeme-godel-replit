@@ -97,7 +97,7 @@ export default function PoemDisplay({ poem, onNumberClick }: PoemDisplayProps) {
     }
   };
 
-  const renderLineWithInteractiveNumbers = (line: string, stanza: any) => {
+  const renderLineWithInteractiveNumbers = (line: string, stanza: any, stanzaIndex: number, lineIndex: number) => {
     let result = line;
     const interactiveNumbers = stanza.interactiveNumbers || [];
     
@@ -124,7 +124,7 @@ export default function PoemDisplay({ poem, onNumberClick }: PoemDisplayProps) {
       }
     });
     
-    // Split and render
+    // Split and render with word-level anchors
     const parts = result.split(/(<[^>]+>)/);
     
     return parts.map((part, partIndex) => {
@@ -168,13 +168,34 @@ export default function PoemDisplay({ poem, onNumberClick }: PoemDisplayProps) {
             whileTap={{ scale: 0.95 }}
             className="interactive-number font-mono text-cosmic-cyan cursor-pointer hover:text-cosmic-light transition-colors"
             onClick={() => handleInteractiveNumberClick(stanza.id, numIndex, interactiveNum)}
+            id={`word-${poem.id}-${stanzaIndex}-${lineIndex}-${partIndex}`}
+            about={`#word-${poem.id}-${stanzaIndex}-${lineIndex}-${partIndex}`}
+            typeof="poetry:InteractiveNumber"
           >
             {currentValue}
           </motion.span>
         );
       }
       
-      return part;
+      // Split regular text into words and add anchors
+      const words = part.split(/(\s+)/);
+      return words.map((word, wordIndex) => {
+        if (word.trim() === '') return word; // Keep whitespace as-is
+        
+        const wordId = `word-${poem.id}-${stanzaIndex}-${lineIndex}-${partIndex}-${wordIndex}`;
+        return (
+          <span
+            key={wordIndex}
+            id={wordId}
+            about={`#${wordId}`}
+            typeof="poetry:Word"
+            property="schema:text"
+            className="word-anchor"
+          >
+            {word}
+          </span>
+        );
+      });
     });
   };
 
@@ -208,8 +229,12 @@ export default function PoemDisplay({ poem, onNumberClick }: PoemDisplayProps) {
                     animate={{ opacity: 1 }}
                     transition={{ delay: (index * 0.1) + (lineIndex * 0.05) }}
                     className="poetry-line hover:text-cosmic-light transition-colors duration-300"
+                    id={`line-${poem.id}-${index}-${lineIndex}`}
+                    about={`#line-${poem.id}-${index}-${lineIndex}`}
+                    typeof="poetry:Line"
+                    property="schema:text"
                   >
-                    {renderLineWithInteractiveNumbers(line, stanza)}
+                    {renderLineWithInteractiveNumbers(line, stanza, index, lineIndex)}
                   </motion.p>
                 ))}
               </motion.div>

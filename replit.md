@@ -121,5 +121,8 @@ Preferred communication style: Simple, everyday language.
 - **Cycle Step Updates**: Fixed cycle navigation to properly update poem text content
 - **Semantic Web Integration**: Implemented JSON-LD structured data, RDFa markup, and semantic API endpoints
 - **SEO Optimization**: Added comprehensive meta tags, Open Graph, and Dublin Core metadata
+- **Word-Level Semantic Anchors**: Added unique semantic anchors to every word in the poem for granular RDF referencing
+- **Comprehensive RDF Export**: Extended RDF export to include word-level triples with position, text, and metadata
+- **API Endpoints**: Added `/api/poems/:id/words` endpoint for programmatic access to word-level semantic data
 
 This architecture provides a scalable, maintainable foundation for the interactive poetry application with clear separation of concerns, modern development practices, and comprehensive semantic web integration for enhanced discoverability and machine readability.

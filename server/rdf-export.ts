@@ -67,21 +67,46 @@ export class RDFExporter {
           { subject: lineUri, predicate: 'schema:position', object: lineIndex.toString(), datatype: 'xsd:integer' },
           { subject: lineUri, predicate: 'schema:text', object: `"${line}"`, datatype: 'xsd:string' }
         );
+
+        // Add word-level semantic anchors
+        const words = line.split(/(\s+)/).filter(word => word.trim() !== '');
+        words.forEach((word, wordIndex) => {
+          const wordUri = `${lineUri}/word/${wordIndex}`;
+          const cleanWord = word.replace(/[^\w\s]/g, '').toLowerCase();
+          triples.push(
+            { subject: wordUri, predicate: 'rdf:type', object: 'poetry:Word' },
+            { subject: lineUri, predicate: 'poetry:hasWord', object: wordUri },
+            { subject: wordUri, predicate: 'schema:position', object: wordIndex.toString(), datatype: 'xsd:integer' },
+            { subject: wordUri, predicate: 'schema:text', object: `"${word}"`, datatype: 'xsd:string' },
+            { subject: wordUri, predicate: 'poetry:cleanText', object: `"${cleanWord}"`, datatype: 'xsd:string' },
+            { subject: wordUri, predicate: 'poetry:wordLength', object: word.length.toString(), datatype: 'xsd:integer' },
+            { subject: wordUri, predicate: 'poetry:anchorId', object: `"word-${poem.id}-${stanzaIndex}-${lineIndex}-${wordIndex}"`, datatype: 'xsd:string' }
+          );
+        });
       });
     });
 
-    // Interactive numbers
-    poemContent.interactiveNumbers.forEach((number: any, index: number) => {
-      const numberUri = `${poemUri}/interactive/${index}`;
-      triples.push(
-        { subject: numberUri, predicate: 'rdf:type', object: 'poetry:InteractiveNumber' },
-        { subject: poemUri, predicate: 'poetry:hasInteractiveElement', object: numberUri },
-        { subject: numberUri, predicate: 'schema:value', object: number.value.toString(), datatype: 'xsd:decimal' },
-        { subject: numberUri, predicate: 'poetry:boundTo', object: `"${number.boundTo}"`, datatype: 'xsd:string' },
-        { subject: numberUri, predicate: 'poetry:stanzaIndex', object: number.stanzaIndex.toString(), datatype: 'xsd:integer' },
-        { subject: numberUri, predicate: 'poetry:lineIndex', object: number.lineIndex.toString(), datatype: 'xsd:integer' },
-        { subject: numberUri, predicate: 'poetry:wordIndex', object: number.wordIndex.toString(), datatype: 'xsd:integer' }
-      );
+    // Interactive numbers from stanzas
+    poemContent.stanzas.forEach((stanza: any, stanzaIndex: number) => {
+      if (stanza.interactiveNumbers) {
+        stanza.interactiveNumbers.forEach((number: any, index: number) => {
+          const numberUri = `${poemUri}/stanza/${stanzaIndex}/interactive/${index}`;
+          triples.push(
+            { subject: numberUri, predicate: 'rdf:type', object: 'poetry:InteractiveNumber' },
+            { subject: poemUri, predicate: 'poetry:hasInteractiveElement', object: numberUri },
+            { subject: numberUri, predicate: 'schema:value', object: `"${number.value}"`, datatype: 'xsd:string' },
+            { subject: numberUri, predicate: 'poetry:type', object: `"${number.type}"`, datatype: 'xsd:string' },
+            { subject: numberUri, predicate: 'poetry:stanzaIndex', object: stanzaIndex.toString(), datatype: 'xsd:integer' },
+            { subject: numberUri, predicate: 'poetry:interactiveIndex', object: index.toString(), datatype: 'xsd:integer' }
+          );
+          
+          if (number.binding) {
+            triples.push(
+              { subject: numberUri, predicate: 'poetry:boundTo', object: `"${number.binding}"`, datatype: 'xsd:string' }
+            );
+          }
+        });
+      }
     });
 
     // End message
@@ -255,5 +280,55 @@ export class RDFExporter {
       }
     }
     return uri;
+  }
+
+  exportWordAnchors(poem: Poem): any {
+    const poemContent = poem.content as any;
+    const wordAnchors: any = {
+      poemId: poem.id,
+      title: poem.title,
+      cycleStep: poem.cycleStep,
+      totalCycles: poem.totalCycles,
+      stanzas: []
+    };
+
+    poemContent.stanzas.forEach((stanza: any, stanzaIndex: number) => {
+      const stanzaData = {
+        stanzaId: stanza.id,
+        stanzaIndex: stanzaIndex,
+        anchorId: `stanza-${poem.id}-${stanzaIndex}`,
+        lines: []
+      };
+
+      stanza.lines.forEach((line: string, lineIndex: number) => {
+        const lineData = {
+          lineIndex: lineIndex,
+          anchorId: `line-${poem.id}-${stanzaIndex}-${lineIndex}`,
+          text: line,
+          words: []
+        };
+
+        const words = line.split(/(\s+)/).filter(word => word.trim() !== '');
+        words.forEach((word: string, wordIndex: number) => {
+          const wordAnchorId = `word-${poem.id}-${stanzaIndex}-${lineIndex}-${wordIndex}`;
+          const cleanWord = word.replace(/[^\w\s]/g, '').toLowerCase();
+          
+          lineData.words.push({
+            wordIndex: wordIndex,
+            anchorId: wordAnchorId,
+            text: word,
+            cleanText: cleanWord,
+            length: word.length,
+            uri: `${this.baseUri}/poems/${poem.id}/stanza/${stanzaIndex}/line/${lineIndex}/word/${wordIndex}`
+          });
+        });
+
+        stanzaData.lines.push(lineData);
+      });
+
+      wordAnchors.stanzas.push(stanzaData);
+    });
+
+    return wordAnchors;
   }
 }

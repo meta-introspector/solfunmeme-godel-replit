@@ -224,7 +224,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('Content-Type', 'text/turtle');
       res.send(turtleData);
     } catch (error) {
-      res.status(500).json({ message: "Failed to generate RDF" });
+      console.error('RDF export error:', error);
+      res.status(500).json({ message: "Failed to generate RDF", error: error instanceof Error ? error.message : String(error) });
     }
   });
 
@@ -264,6 +265,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(anchors);
     } catch (error) {
       res.status(500).json({ message: "Failed to generate semantic anchors" });
+    }
+  });
+
+  // Get word-level semantic anchors
+  app.get("/api/poems/:id/words", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const poem = await storage.getPoem(id);
+      
+      if (!poem) {
+        return res.status(404).json({ message: "Poem not found" });
+      }
+      
+      const baseUri = `${req.protocol}://${req.get('host')}`;
+      const rdfExporter = new RDFExporter(baseUri);
+      const wordAnchors = rdfExporter.exportWordAnchors(poem);
+      
+      res.json(wordAnchors);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to generate word anchors" });
     }
   });
 
