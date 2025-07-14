@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+
+  /* Custom cosmic theme colors */
+  --cosmic-black: hsl(0, 0%, 4%);
+  --cosmic-navy: hsl(220, 26%, 14%);
+  --cosmic-blue: hsl(220, 39%, 11%);
+  --cosmic-deep: hsl(203, 64%, 25%);
+  --cosmic-cyan: hsl(198, 71%, 47%);
+  --cosmic-light: hsl(203, 84%, 89%);
+  --cosmic-white: hsl(213, 100%, 97%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap');
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .bg-cosmic-black {
+    background-color: var(--cosmic-black);
+  }
+  
+  .bg-cosmic-navy {
+    background-color: var(--cosmic-navy);
+  }
+  
+  .bg-cosmic-blue {
+    background-color: var(--cosmic-blue);
+  }
+  
+  .bg-cosmic-deep {
+    background-color: var(--cosmic-deep);
+  }
+  
+  .bg-cosmic-cyan {
+    background-color: var(--cosmic-cyan);
+  }
+  
+  .bg-cosmic-light {
+    background-color: var(--cosmic-light);
+  }
+  
+  .bg-cosmic-white {
+    background-color: var(--cosmic-white);
+  }
+  
+  .text-cosmic-black {
+    color: var(--cosmic-black);
+  }
+  
+  .text-cosmic-navy {
+    color: var(--cosmic-navy);
+  }
+  
+  .text-cosmic-blue {
+    color: var(--cosmic-blue);
+  }
+  
+  .text-cosmic-deep {
+    color: var(--cosmic-deep);
+  }
+  
+  .text-cosmic-cyan {
+    color: var(--cosmic-cyan);
+  }
+  
+  .text-cosmic-light {
+    color: var(--cosmic-light);
+  }
+  
+  .text-cosmic-white {
+    color: var(--cosmic-white);
+  }
+  
+  .border-cosmic-black {
+    border-color: var(--cosmic-black);
+  }
+  
+  .border-cosmic-navy {
+    border-color: var(--cosmic-navy);
+  }
+  
+  .border-cosmic-blue {
+    border-color: var(--cosmic-blue);
+  }
+  
+  .border-cosmic-deep {
+    border-color: var(--cosmic-deep);
+  }
+  
+  .border-cosmic-cyan {
+    border-color: var(--cosmic-cyan);
+  }
+  
+  .border-cosmic-light {
+    border-color: var(--cosmic-light);
+  }
+  
+  .border-cosmic-white {
+    border-color: var(--cosmic-white);
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .font-poetry {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-ui {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .interactive-number {
+    @apply transition-all duration-300 cursor-pointer hover:scale-105;
+  }
+
+  .interactive-number:hover {
+    text-shadow: 0 0 8px rgba(50, 130, 184, 0.5);
+  }
+
+  .poetry-line {
+    @apply transition-all duration-500;
+  }
+
+  .poetry-line:hover {
+    text-shadow: 0 0 10px rgba(187, 225, 250, 0.3);
+  }
+
+  .number-input {
+    @apply transition-all duration-300;
+  }
+
+  .number-input:focus {
+    box-shadow: 0 0 20px rgba(50, 130, 184, 0.4);
+  }
+
+  .cycle-indicator {
+    animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+}
