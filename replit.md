@@ -124,5 +124,8 @@ Preferred communication style: Simple, everyday language.
 - **Word-Level Semantic Anchors**: Added unique semantic anchors to every word in the poem for granular RDF referencing
 - **Comprehensive RDF Export**: Extended RDF export to include word-level triples with position, text, and metadata
 - **API Endpoints**: Added `/api/poems/:id/words` endpoint for programmatic access to word-level semantic data
+- **Clickable Word Interactions**: Implemented clickable words with highlighting, info display panel, and permalink generation
+- **Word Occurrence Tracking**: Added word occurrence counting and navigation across poem structure
+- **Cycle Step Display Fix**: Fixed cycle step display to show correct format (1 of 42) instead of swapped values
 
 This architecture provides a scalable, maintainable foundation for the interactive poetry application with clear separation of concerns, modern development practices, and comprehensive semantic web integration for enhanced discoverability and machine readability.
