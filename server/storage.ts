@@ -52,6 +52,7 @@ export class MemStorage implements IStorage {
             ],
             hasLeftBorder: false,
             interactiveNumbers: [
+              { value: "1", type: "other", binding: "cycleStep" },
               { value: "42", type: "other", binding: "totalCycles" }
             ]
           },

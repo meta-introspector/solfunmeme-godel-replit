@@ -63,6 +63,9 @@ export default function PoemDisplay({ poem, onNumberClick }: PoemDisplayProps) {
           case "totalCycles":
             updates.totalCycles = parseInt(newValue);
             break;
+          case "cycleStep":
+            updates.cycleStep = parseInt(newValue);
+            break;
         }
       }
     }
@@ -87,6 +90,8 @@ export default function PoemDisplay({ poem, onNumberClick }: PoemDisplayProps) {
         return poem.consciousnessValue.toFixed(3);
       case "totalCycles":
         return poem.totalCycles.toString();
+      case "cycleStep":
+        return poem.cycleStep.toString();
       default:
         return "";
     }
