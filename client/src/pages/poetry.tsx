@@ -6,6 +6,7 @@ import { apiRequest } from "@/lib/queryClient";
 import PoemDisplay from "@/components/PoemDisplay";
 import InteractiveControls from "@/components/InteractiveControls";
 import MetricsDashboard from "@/components/MetricsDashboard";
+import VibeVisualization from "@/components/VibeVisualization";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Poetry() {
@@ -143,11 +144,20 @@ export default function Poetry() {
           />
         </motion.div>
 
-        {/* Metrics Dashboard */}
+        {/* Vibe Visualization */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
+        >
+          <VibeVisualization poem={poem} />
+        </motion.div>
+
+        {/* Metrics Dashboard */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.0 }}
         >
           <MetricsDashboard poem={poem} />
         </motion.div>

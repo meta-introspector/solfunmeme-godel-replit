@@ -71,6 +71,27 @@ export default function PoemDisplay({ poem, onNumberClick }: PoemDisplayProps) {
     setEditingNumber(null);
   };
 
+  const getCurrentValueForBinding = (binding: string) => {
+    switch (binding) {
+      case "godelNumber":
+        return poem.godelNumber;
+      case "chaosValue":
+        return poem.chaosValue.toFixed(2);
+      case "beautyValue":
+        return poem.beautyValue.toFixed(2);
+      case "complexityValue":
+        return poem.complexityValue.toFixed(2);
+      case "coherenceValue":
+        return poem.coherenceValue.toFixed(2);
+      case "consciousnessValue":
+        return poem.consciousnessValue.toFixed(3);
+      case "totalCycles":
+        return poem.totalCycles.toString();
+      default:
+        return "";
+    }
+  };
+
   const renderLineWithInteractiveNumbers = (line: string, stanza: any) => {
     let result = line;
     const interactiveNumbers = stanza.interactiveNumbers || [];
@@ -81,6 +102,9 @@ export default function PoemDisplay({ poem, onNumberClick }: PoemDisplayProps) {
     sortedNumbers.forEach((num, index) => {
       const isEditing = editingNumber?.stanzaId === stanza.id && 
                        editingNumber?.numberIndex === index;
+      
+      // Get current value from poem state if bound, otherwise use original value
+      const currentValue = num.binding ? getCurrentValueForBinding(num.binding) : num.value;
       
       if (isEditing) {
         result = result.replace(
@@ -127,16 +151,20 @@ export default function PoemDisplay({ poem, onNumberClick }: PoemDisplayProps) {
       if (interactiveMatch) {
         const numIndex = parseInt(interactiveMatch[1]);
         const interactiveNum = interactiveNumbers[numIndex];
+        const currentValue = interactiveNum.binding ? getCurrentValueForBinding(interactiveNum.binding) : interactiveNum.value;
         
         return (
           <motion.span
-            key={partIndex}
+            key={`${partIndex}-${currentValue}`}
+            initial={{ scale: 1.1, color: "#3282b8" }}
+            animate={{ scale: 1, color: "#3282b8" }}
+            transition={{ duration: 0.3 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="interactive-number font-mono text-cosmic-cyan cursor-pointer hover:text-cosmic-light transition-colors"
             onClick={() => handleInteractiveNumberClick(stanza.id, numIndex, interactiveNum)}
           >
-            {interactiveNum.value}
+            {currentValue}
           </motion.span>
         );
       }
